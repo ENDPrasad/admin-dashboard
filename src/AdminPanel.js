@@ -13,9 +13,12 @@ const AdminPanel = () => {
   useEffect(() => {
     if (isAuthenticated) {
       const fetchReservations = async () => {
-        const res = await axios.get("https://restaurant-app-cmon.onrender.com/reserve", {
-          headers: { "x-auth-token": token },
-        });
+        const res = await axios.get(
+          "https://restaurant-app-cmon.onrender.com/reserve",
+          {
+            headers: { "x-auth-token": token },
+          }
+        );
         setReservations(res.data);
       };
       fetchReservations();
@@ -24,10 +27,13 @@ const AdminPanel = () => {
 
   const login = async () => {
     try {
-      const res = await axios.post("https://restaurant-app-cmon.onrender.com/admin/login", {
-        username,
-        password,
-      });
+      const res = await axios.post(
+        "https://restaurant-app-cmon.onrender.com/admin/login",
+        {
+          username,
+          password,
+        }
+      );
       setToken(res.data.token);
       setIsAuthenticated(true);
     } catch (err) {
@@ -50,11 +56,15 @@ const AdminPanel = () => {
     );
     setStatus("");
     setSelectedReservation(null);
-    const res = await axios.get("https://restaurant-app-cmon.onrender.com/reserve", {
-      headers: { "x-auth-token": token },
-    });
+    const res = await axios.get(
+      "https://restaurant-app-cmon.onrender.com/reserve",
+      {
+        headers: { "x-auth-token": token },
+      }
+    );
     setReservations(res.data);
   };
+
   if (!isAuthenticated) {
     return (
       <div style={styles.container}>
@@ -83,31 +93,39 @@ const AdminPanel = () => {
   return (
     <div style={styles.container}>
       <h1 style={styles.heading}>Admin Panel</h1>
-      <table style={styles.table}>
-        <thead>
-          <tr>
-            <th style={styles.th}>Email</th>
-            <th style={styles.th}>Status</th>
-            <th style={styles.th}>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {reservations.map((reservation) => (
-            <tr key={reservation._id} style={styles.tr}>
-              <td style={styles.td}>{reservation.email}</td>
-              <td style={styles.td}>{reservation.status}</td>
-              <td style={styles.td}>
-                <button
-                  onClick={() => setSelectedReservation(reservation)}
-                  style={styles.button}
-                >
-                  Update Status
-                </button>
-              </td>
+      <div style={styles.tableContainer}>
+        <table style={styles.table}>
+          <thead>
+            <tr>
+              <th style={styles.th}>Email</th>
+              <th style={styles.th}>Date</th>
+              <th style={styles.th}>Time</th>
+              <th style={styles.th}>No. of Persons</th>
+              <th style={styles.th}>Status</th>
+              <th style={styles.th}>Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {reservations.map((reservation) => (
+              <tr key={reservation._id} style={styles.tr}>
+                <td style={styles.td}>{reservation.email}</td>
+                <td style={styles.td}>{reservation.date}</td>
+                <td style={styles.td}>{reservation.time}</td>
+                <td style={styles.td}>{reservation.persons}</td>
+                <td style={styles.td}>{reservation.status}</td>
+                <td style={styles.td}>
+                  <button
+                    onClick={() => setSelectedReservation(reservation)}
+                    style={styles.button}
+                  >
+                    Update Status
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       {selectedReservation && (
         <div style={styles.modalOverlay}>
           <div style={styles.modal}>
@@ -143,7 +161,7 @@ const AdminPanel = () => {
 
 const styles = {
   container: {
-    maxWidth: "600px",
+    maxWidth: "800px",
     margin: "0 auto",
     padding: "20px",
     textAlign: "center",
@@ -173,10 +191,14 @@ const styles = {
     cursor: "pointer",
     margin: "5px",
   },
+  tableContainer: {
+    overflowX: "auto",
+  },
   table: {
     width: "100%",
     marginBottom: "20px",
     borderCollapse: "collapse",
+    minWidth: "600px",
   },
   th: {
     borderBottom: "1px solid #ddd",
