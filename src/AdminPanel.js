@@ -9,6 +9,7 @@ const AdminPanel = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
+  const [filter, setFilter] = useState("Pending");
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -21,6 +22,7 @@ const AdminPanel = () => {
         );
         setReservations(res.data);
       };
+
       fetchReservations();
     }
   }, [isAuthenticated, token]);
@@ -90,9 +92,28 @@ const AdminPanel = () => {
     );
   }
 
+  const filteredReservations = reservations.filter(
+    (reservation) => reservation.status === filter
+  );
+
   return (
     <div style={styles.container}>
       <h1 style={styles.heading}>Admin Panel</h1>
+      <div style={styles.filterContainer}>
+        <label htmlFor="filter" style={styles.label}>
+          Filter by Status:{" "}
+        </label>
+        <select
+          id="filter"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          style={styles.select}
+        >
+          <option value="Pending">Pending</option>
+          <option value="Confirmed">Confirmed</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
       <div style={styles.tableContainer}>
         <table style={styles.table}>
           <thead>
@@ -106,7 +127,7 @@ const AdminPanel = () => {
             </tr>
           </thead>
           <tbody>
-            {reservations.map((reservation) => (
+            {filteredReservations.map((reservation) => (
               <tr key={reservation._id} style={styles.tr}>
                 <td style={styles.td}>{reservation.email}</td>
                 <td style={styles.td}>{reservation.date}</td>
@@ -171,6 +192,13 @@ const styles = {
   },
   heading: {
     marginBottom: "20px",
+  },
+  filterContainer: {
+    marginBottom: "20px",
+    textAlign: "left",
+  },
+  label: {
+    marginRight: "10px",
   },
   subHeading: {
     marginBottom: "10px",
